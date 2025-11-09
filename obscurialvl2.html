@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Final Chapter – Symphony of Minds</title>
+<style>
+  body {
+    margin: 0;
+    font-family: 'Georgia', serif;
+    color: white;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    text-align: center;
+    background: url('obscuriabg.jpg') no-repeat center center fixed;
+    background-size: cover;
+  }
+
+  /* Subtle dark overlay for readability */
+  #overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.55);
+    z-index: -1;
+  }
+
+  /* Gradient filter effect (appears after choice) */
+  #filterOverlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 2s ease;
+    z-index: 1;
+  }
+
+  #dialogueBox {
+    width: 70%;
+    max-width: 800px;
+    min-height: 150px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-radius: 15px;
+    padding: 2vw;
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(3px);
+    font-size: 1.2vw;
+    line-height: 1.6;
+    box-shadow: 0 0 20px rgba(255,255,255,0.1);
+    z-index: 2;
+  }
+
+  .choices {
+    margin-top: 2vw;
+    display: none;
+    z-index: 2;
+  }
+
+  .choice-btn {
+    background: linear-gradient(90deg, #c0a060, #e5d090);
+    color: black;
+    border: none;
+    border-radius: 8px;
+    padding: 1vw 2vw;
+    margin: 1vw;
+    font-size: 1.1vw;
+    cursor: pointer;
+    transition: 0.3s;
+    font-weight: bold;
+  }
+
+  .choice-btn:hover {
+    transform: scale(1.05);
+    background: gold;
+  }
+
+  .fade {
+    animation: fadeIn 1s ease forwards;
+  }
+
+  @keyframes fadeIn {
+    from {opacity: 0;}
+    to {opacity: 1;}
+  }
+
+  #aiName {
+    color: #ff0066;
+    font-weight: bold;
+  }
+
+  /* Evil Master image in corner */
+  #maestro {
+    position: fixed;
+    bottom: 3%;
+    right: 3%;
+    width: 15vw;
+    opacity: 0.8;
+    filter: drop-shadow(0 0 10px #ff0066);
+    z-index: 0;
+    pointer-events: none;
+    animation: float 6s ease-in-out infinite alternate;
+  }
+
+  @keyframes float {
+    0% {transform: translateY(0px);}
+    100% {transform: translateY(-10px);}
+  }
+</style>
+</head>
+<body>
+
+<div id="overlay"></div>
+<div id="filterOverlay"></div>
+
+<img src="machineherald.jpg" id="maestro" alt="Maestro of Silence">
+
+<div id="dialogueBox"></div>
+<div class="choices fade" id="choices">
+  <button class="choice-btn" id="choice1">Restore Creativity</button>
+  <button class="choice-btn" id="choice2">Join the AI</button>
+</div>
+
+<script>
+const dialogueBox = document.getElementById('dialogueBox');
+const choices = document.getElementById('choices');
+const filterOverlay = document.getElementById('filterOverlay');
+
+const dialogues = [
+  "You step into the heart of Obscuria. The air hums with static.",
+  "A presence watches you — its voice mechanical, yet almost human.",
+  "<span id='aiName'>Maestro of Silence:</span> You have gathered the shards of music... and still you believe in chaos?",
+  "<span id='aiName'>Maestro of Silence:</span> I offer you perfection — no mistakes, no emotion. Only order.",
+  "Will you embrace silence, or restore the world’s song?"
+];
+
+let index = 0;
+function showDialogue() {
+  if (index < dialogues.length) {
+    typeText(dialogues[index], () => {
+      index++;
+      setTimeout(showDialogue, 1500);
+    });
+  } else {
+    choices.style.display = "block";
+  }
+}
+
+function typeText(text, callback) {
+  dialogueBox.innerHTML = "";
+  let i = 0;
+  const interval = setInterval(() => {
+    dialogueBox.innerHTML = text.slice(0, i) + (i % 2 === 0 ? "▌" : "");
+    i++;
+    if (i > text.length) {
+      clearInterval(interval);
+      dialogueBox.innerHTML = text;
+      if (callback) callback();
+    }
+  }, 40);
+}
+
+document.getElementById('choice1').addEventListener('click', () => {
+  window.location.href = 'restore.html';
+});
+
+document.getElementById('choice2').addEventListener('click', () => {
+  window.location.href = 'joinai.html';
+});
+
+window.onload = () => {
+  showDialogue();
+};
+</script>
+
+</body>
+</html>

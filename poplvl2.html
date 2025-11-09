@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Pop Level 2</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      background: url('popkingdom.png') no-repeat center center fixed;
+      background-size: cover;
+      font-family: Arial, sans-serif;
+    }
+
+
+    /* --- audio zones (top row) --- */
+    .audio-zone {
+      position: absolute;
+      width: 160px;
+      height: 160px;
+      top: 100px;
+      background: rgba(0,0,0,0.55);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 15px;
+      font-size: 1rem;
+      cursor: pointer;
+      user-select: none;
+      transition: transform 0.3s, background 0.3s;
+    }
+
+
+    .audio-zone:hover {
+      background: rgba(255,255,255,0.25);
+      transform: scale(1.05);
+    }
+
+
+    /* center horizontally */
+    #song1-audio { left: 150px; }
+    #song2-audio { left: 400px; }
+    #song3-audio { left: 650px; }
+    #song4-audio { left: 900px; }
+
+
+    /* --- draggable singer images (bottom row) --- */
+    .artist {
+      position: absolute;
+      bottom: 40px;
+      width: 120px;
+      height: 120px;
+      background-size: cover;
+      background-position: center;
+      border: 2px solid #fff;
+      border-radius: 12px;
+      cursor: grab;
+    }
+
+
+    #celine { left: 650px; background-image: url('celinedion.jpg'); }
+    #britney { left: 400px; background-image: url('britneyspears.jpg'); }
+    #abba { left: 900px; background-image: url('ABBA.jpg'); }
+    #connie { left: 150px; background-image: url('conniefrancis.jpg'); }
+
+
+    /* --- popup feedback --- */
+    #popup {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.55);
+      color: #fff;
+      font-size: 2rem;
+      font-weight: bold;
+      z-index: 1000;
+      flex-direction: column;
+    }
+
+
+    /* --- next arrow --- */
+    #nextBtn {
+      display: none;
+      margin-top: 20px;
+      padding: 10px 18px;
+      font-size: 1.5rem;
+      border: none;
+      border-radius: 50%;
+      background: #fff;
+      cursor: pointer;
+      box-shadow: 0 0 10px rgba(0,0,0,.4);
+    }
+  </style>
+</head>
+<body>
+
+
+  <!-- Top: Audio buttons -->
+  <div id="song1-audio" class="audio-zone dropzone" data-artist="celine"
+       ondrop="drop(event)" ondragover="allowDrop(event)" onclick="playSound('MyHeartWillGoOn.mp3')" align="center">
+    🎵 My Heart Will Go On
+  </div>
+
+
+  <div id="song2-audio" class="audio-zone dropzone" data-artist="britney"
+       ondrop="drop(event)" ondragover="allowDrop(event)" onclick="playSound('babyonemoretime.mp3')" align="center">
+    🎶 Baby One More Time
+  </div>
+
+
+  <div id="song3-audio" class="audio-zone dropzone" data-artist="abba"
+       ondrop="drop(event)" ondragover="allowDrop(event)" onclick="playSound('dancingqueen.mp3')">
+    🎤 Dancing Queen
+  </div>
+
+
+  <div id="song4-audio" class="audio-zone dropzone" data-artist="connie"
+       ondrop="drop(event)" ondragover="allowDrop(event)" onclick="playSound('prettylittlebaby.mp3')">
+    🎧 Pretty Little Baby
+  </div>
+
+
+  <!-- Bottom: Draggable artist images -->
+  <div id="celine" class="artist" draggable="true" ondragstart="drag(event)"></div>
+  <div id="britney" class="artist" draggable="true" ondragstart="drag(event)"></div>
+  <div id="abba" class="artist" draggable="true" ondragstart="drag(event)"></div>
+  <div id="connie" class="artist" draggable="true" ondragstart="drag(event)"></div>
+
+
+  <!-- Popup feedback -->
+  <div id="popup">
+    <span>Correct!</span>
+    <button id="nextBtn" onclick="location.href='finalpop.html'">&#10145;</button>
+  </div>
+
+
+  <script>
+    let matchedCount = 0;
+
+
+    function allowDrop(ev){ ev.preventDefault(); }
+
+
+    function drag(ev){ ev.dataTransfer.setData('text', ev.target.id); }
+
+
+    function drop(ev){
+      ev.preventDefault();
+      const data = ev.dataTransfer.getData('text');
+      const dragged = document.getElementById(data);
+      const target = ev.target.closest('.dropzone');
+      if (!target) return;
+
+
+      // Check if correct artist is matched
+      if (target.dataset.artist === data) {
+        target.appendChild(dragged);
+        dragged.style.position = 'relative';
+        dragged.style.bottom = dragged.style.left = 'unset';
+        matchedCount++;
+        showPopup(matchedCount === 4);
+        if (matchedCount === 4) {
+          document.getElementById('nextBtn').style.display = 'inline-block';
+        }
+      }
+    }
+
+
+    function showPopup(persistent = false){
+      const pop = document.getElementById('popup');
+      pop.style.display = 'flex';
+      if(!persistent){
+        setTimeout(()=>{ pop.style.display = 'none'; }, 1100);
+      }
+    }
+
+
+    function playSound(file){
+      const audio = new Audio(file);
+      audio.play();
+    }
+  </script>
+</body>
+</html>
+
+
+
+
+

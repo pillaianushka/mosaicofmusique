@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guitar Amp Match Game</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    height: 100vh;
+    background: radial-gradient(circle at center, #1b1b1b, #000);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: sans-serif;
+    color: white;
+    user-select: none;
+  }
+
+
+
+
+  #game {
+    position: relative;
+    width: 90%;
+    height: 80%;
+    border: 2px solid #444;
+    border-radius: 15px;
+    background: linear-gradient(135deg, #222, #111);
+    overflow: hidden;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+  }
+
+
+
+
+  .column {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    height: 90%;
+  }
+
+
+
+
+  .guitar, .amp {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    border-radius: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.6);
+  }
+
+
+
+
+  .guitar { background: #e74c3c; }
+  .amp { background: #3498db; }
+
+
+
+
+  .guitar.locked {
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
+
+
+
+  /* 🎸 CABLE STYLE START */
+  svg.cable {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 50;
+  }
+
+
+
+
+  .cable-path {
+    fill: none;
+    stroke: #f1c40f;
+    stroke-width: 6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    vector-effect: non-scaling-stroke;
+    filter: drop-shadow(0 0 6px rgba(0,0,0,0.6));
+    transition: stroke 0.3s ease, opacity 0.3s ease;
+  }
+
+
+
+
+  .correct-path { stroke: #4cff88; filter: drop-shadow(0 0 10px rgba(76,255,136,0.25)); }
+  .wrong-path { stroke: #ff5252; opacity: 0; }
+
+
+
+
+  .plug {
+    fill: #d9d9d9;
+    stroke: #666;
+    stroke-width: 1.5;
+    filter: drop-shadow(0 1px 2px rgba(0,0,0,0.5));
+  }
+  /* 🎸 CABLE STYLE END */
+</style>
+</head>
+<body>
+
+
+
+
+<!-- START SCREEN -->
+<div id="start-screen" style="
+  position:fixed;inset:0;
+  background:#000a;color:white;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.5rem;z-index:9999;cursor:pointer;">
+ How to play:<br>
+ Join the guitars to their respective amp settings- <br><br><br>
+Clean: Produces a clear, natural tone that preserves the guitar’s pure sound.<br><br>
+
+
+Distorted: Adds grit and crunch for a heavier, more aggressive tone.<br><br>
+
+
+Delayed: Echoes the sound back after a short time, creating a spacious, layered effect.<br><br><br><br>
+ ▶ Click to Start
+</div>
+
+
+
+
+<div id="game">
+  <div class="column left">
+    <div class="guitar" id="guitarA">🎸 A</div>
+    <div class="guitar" id="guitarB">🎸 B</div>
+    <div class="guitar" id="guitarC">🎸 C</div>
+  </div>
+
+
+
+
+  <div class="column right">
+    <div class="amp" id="amp1">🔊 1- Clean</div>
+    <div class="amp" id="amp2">🔊 2- Distorted</div>
+    <div class="amp" id="amp3">🔊 3- Delayed</div>
+  </div>
+
+
+
+
+  <!-- Guitar Audio Only -->
+  <audio id="audio-guitarA" src="distortion.aac"></audio>
+  <audio id="audio-guitarB" src="delay.aac"></audio>
+  <audio id="audio-guitarC" src="clean.aac"></audio>
+</div>
+
+
+
+
+<!-- NEXT BUTTON -->
+<div id="next-screen" style="
+  display:none;
+  position:fixed;inset:0;
+  background:#000c;
+  color:white;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  font-size:2rem;
+  z-index:9999;">
+  <div id="overlay">
+  🎉 Good Job! 🎉 </div>
+  <button id="nextBtn" style="
+    margin-top:20px;
+    padding:10px 25px;
+    font-size:1.2rem;
+    border:none;
+    border-radius:8px;
+    background:#4cff88;
+    color:#000;
+    cursor:pointer;">Next</button>
+</div>
+
+
+
+
+<script>
+  // unlock audio on first click (Chrome autoplay policy)
+  document.getElementById("start-screen").addEventListener("click", () => {
+    document.querySelectorAll("audio").forEach(a => a.play().then(() => a.pause()));
+    document.getElementById("start-screen").remove();
+  });
+</script>
+
+
+
+
+<script>
+const matches = { guitarA: "amp2", guitarB: "amp3", guitarC: "amp1" };
+const game = document.getElementById('game');
+let currentCable = null, startX = 0, startY = 0, draggingFrom = null;
+const connectedGuitars = new Set();
+
+
+
+
+let currentGuitarAudio = null;
+
+
+
+
+document.querySelectorAll('.guitar').forEach(guitar => {
+  guitar.addEventListener('mousedown', startDrag);
+  guitar.addEventListener('click', () => playAudio(guitar.id));
+});
+document.querySelectorAll('.amp').forEach(amp => {
+  amp.addEventListener('click', () => {}); // amps are icons only
+});
+
+
+
+
+function startDrag(e) {
+  e.preventDefault();
+  const guitar = e.target;
+  if (connectedGuitars.has(guitar.id)) return;
+
+
+
+
+  const rect = guitar.getBoundingClientRect();
+  const containerRect = game.getBoundingClientRect();
+  startX = rect.left - containerRect.left + rect.width / 2;
+  startY = rect.top - containerRect.top + rect.height / 2;
+  draggingFrom = guitar.id;
+
+
+
+
+  currentCable = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  currentCable.classList.add("cable");
+  currentCable.innerHTML = `
+    <path class="cable-path" d="" />
+    <circle class="plug" r="6" />
+    <circle class="plug" r="6" />`;
+  game.appendChild(currentCable);
+
+
+
+
+  document.addEventListener('mousemove', onDrag);
+  document.addEventListener('mouseup', endDrag);
+}
+
+
+
+
+function onDrag(e) {
+  if (!currentCable) return;
+  const containerRect = game.getBoundingClientRect();
+  const x2 = e.clientX - containerRect.left;
+  const y2 = e.clientY - containerRect.top;
+  const midX = (startX + x2) / 2;
+  const curve = 80;
+  const path = `M ${startX} ${startY} C ${midX} ${startY - curve}, ${midX} ${y2 + curve}, ${x2} ${y2}`;
+  currentCable.querySelector('.cable-path').setAttribute('d', path);
+  const plugs = currentCable.querySelectorAll('.plug');
+  plugs[0].setAttribute('cx', startX);
+  plugs[0].setAttribute('cy', startY);
+  plugs[1].setAttribute('cx', x2);
+  plugs[1].setAttribute('cy', y2);
+}
+
+
+
+
+function endDrag(e) {
+  if (!currentCable) return;
+  const target = document.elementFromPoint(e.clientX, e.clientY);
+  const correct = matches[draggingFrom];
+  const path = currentCable.querySelector('.cable-path');
+
+
+
+
+  if (target && target.classList.contains('amp')) {
+    const ampRect = target.getBoundingClientRect();
+    const containerRect = game.getBoundingClientRect();
+    const x2 = ampRect.left - containerRect.left + ampRect.width / 2;
+    const y2 = ampRect.top - containerRect.top + ampRect.height / 2;
+    const midX = (startX + x2) / 2;
+    const curve = 80;
+    const snappedPath = `M ${startX} ${startY} C ${midX} ${startY - curve}, ${midX} ${y2 + curve}, ${x2} ${y2}`;
+    path.setAttribute('d', snappedPath);
+
+
+
+
+    const plugs = currentCable.querySelectorAll('.plug');
+    plugs[0].setAttribute('cx', startX);
+    plugs[0].setAttribute('cy', startY);
+    plugs[1].setAttribute('cx', x2);
+    plugs[1].setAttribute('cy', y2);
+
+
+
+
+    if (target.id === correct) {
+      path.classList.add('correct-path');
+      connectedGuitars.add(draggingFrom);
+      document.getElementById(draggingFrom).classList.add('locked');
+      playAudio(draggingFrom);
+      checkAllMatched();
+    } else {
+      path.classList.add('wrong-path');
+      setTimeout(() => currentCable.remove(), 420);
+    }
+  } else {
+    currentCable.remove();
+  }
+
+
+
+
+  document.removeEventListener('mousemove', onDrag);
+  document.removeEventListener('mouseup', endDrag);
+  currentCable = null;
+  draggingFrom = null;
+}
+
+
+
+
+function playAudio(id) {
+  const audio = document.getElementById('audio-' + id);
+  if (!audio) return;
+
+
+
+
+  if (currentGuitarAudio && currentGuitarAudio !== audio) {
+    currentGuitarAudio.pause();
+    currentGuitarAudio.currentTime = 0;
+  }
+  currentGuitarAudio = audio;
+
+
+
+
+  if (audio.paused) {
+    audio.currentTime = 0;
+    audio.play();
+  } else {
+    audio.pause();
+    audio.currentTime = 0;
+  }
+}
+
+
+
+
+function checkAllMatched() {
+  if (connectedGuitars.size === 3) {
+    setTimeout(() => {
+      document.getElementById("next-screen").style.display = "flex";
+    }, 3000); // 3 sec pause before showing "Good Job"
+  }
+}
+
+
+
+
+// Next button
+document.getElementById("nextBtn").addEventListener("click", () => {
+  window.location.href = "finalrock.html"; // change to your next page
+});
+</script>
+
+
+
+
+</body>
+</html>
+
+
+
+
+
+
+
+

@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jazz Kingdom Hangman</title>
+  <style>
+    body {
+      background: url('jazzstage.jpg') no-repeat center center;
+      background-size: cover;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: Calibri, sans-serif;
+    }
+
+    .game-container {
+      width: 400px;
+      background: rgba(255, 255, 255, 0.5);
+      border: 2px solid #f0d78c;
+      border-radius: 15px;
+      padding: 20px 30px;
+    }
+
+    h1 {
+      margin-top: 0;
+      letter-spacing: 1px;
+    }
+
+    .word {
+      margin: 20px 0;
+      font-size: 2rem;
+      letter-spacing: 5px;
+    }
+
+    .wrong-letters-container {
+      margin: 10px 0;
+      font-size: 1.1rem;
+    }
+
+    #letter-input {
+      padding: 8px 12px;
+      border-radius: 5px;
+      border: 1px solid #f0d78c;
+      font-size: 1rem;
+      color: #000;
+      outline: none;
+    }
+
+    button {
+      background: #f0d78c;
+      border: none;
+      border-radius: 6px;
+      padding: 8px 15px;
+      margin: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      color: #1a1a1a;
+    }
+
+    button:hover {
+      background: #ffe9a8;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .hangman {
+      position: relative;
+      width: 120px;
+      height: 160px;
+      margin: 20px auto;
+    }
+
+    .stick {
+      background: #000000;
+      position: absolute;
+    }
+
+    .base { width: 100px; height: 6px; bottom: 0; left: 10px; }
+    .pole { width: 6px; height: 140px; left: 20px; bottom: 0; }
+    .beam { width: 60px; height: 6px; left: 20px; top: 0; }
+    .rope { width: 2px; height: 15px; left: 78px; top: 6px; }
+
+    .man { position: absolute; left: 70px; }
+    .head { width: 20px; height: 20px; border: 3px solid #000000; border-radius: 50%; top: 20px; }
+    .body { width: 2px; height: 30px; background: #000000; top: 40px; left: 80px; }
+    .left-arm, .right-arm, .left-leg, .right-leg { width: 2px; height: 20px; background: #f0d78c; }
+    .left-arm { transform: rotate(-45deg); top: 45px; left: 70px; }
+    .right-arm { transform: rotate(45deg); top: 45px; left: 90px; }
+    .right-leg { transform: rotate(45deg); top: 70px; left: 72px; }
+    .left-leg { transform: rotate(-45deg); top: 70px; left: 88px; }
+
+    #message { font-size: 1.2rem; margin-top: 10px; }
+
+    .status-bar {
+      margin-bottom: 10px;
+      font-weight: bold;
+      font-size: 1.1rem;
+      color: #4b3a00;
+    }
+  </style>
+</head>
+<body>
+  <div class="game-container">
+    <h1>🎷 Jazz Kingdom Hangman 🎶</h1>
+    <div class="status-bar" id="status-bar">Level: 1 / 3</div>
+    <p class="intro">Guess the jazz-themed word before the tune ends!</p>
+
+    <div class="word" id="word"></div>
+    <div class="wrong-letters-container">
+      <p>Wrong Letters:</p>
+      <span id="wrong-letters"></span>
+    </div>
+
+    <div class="hangman" id="hangman">
+      <div class="stick base"></div>
+      <div class="stick pole"></div>
+      <div class="stick beam"></div>
+      <div class="stick rope"></div>
+      <div class="man head hidden"></div>
+      <div class="man body hidden"></div>
+      <div class="man left-arm hidden"></div>
+      <div class="man right-arm hidden"></div>
+      <div class="man left-leg hidden"></div>
+      <div class="man right-leg hidden"></div>
+    </div>
+
+    <input type="text" id="letter-input" maxlength="1" placeholder="Enter a letter" autofocus />
+    <button id="guess-btn">Guess</button>
+
+    <p id="message"></p>
+    <button id="restart-btn" class="hidden">Next Word</button>
+    <button id="next-level-btn" class="hidden">Click here to complete the level 🎵</button>
+  </div>
+
+  <script>
+    const words = [
+      "saxophone", "trumpet", "improvisation", "syncopation", "blues",
+      "swing", "bebop", "piano", "scat", "groove", "crescendo", "ensemble", "tempo"
+    ];
+
+    const wordEl = document.getElementById('word');
+    const wrongEl = document.getElementById('wrong-letters');
+    const input = document.getElementById('letter-input');
+    const guessBtn = document.getElementById('guess-btn');
+    const message = document.getElementById('message');
+    const restartBtn = document.getElementById('restart-btn');
+    const nextLevelBtn = document.getElementById('next-level-btn');
+    const hangmanParts = document.querySelectorAll('.man');
+    const statusBar = document.getElementById('status-bar');
+
+    let selectedWord = '';
+    let correctLetters = [];
+    let wrongLetters = [];
+    let currentLevel = 1;
+    const totalLevels = 3;
+
+    function startGame() {
+      selectedWord = words[Math.floor(Math.random() * words.length)];
+      correctLetters = [];
+      wrongLetters = [];
+      updateWord();
+      updateWrongLetters();
+      message.textContent = '';
+      hangmanParts.forEach(p => p.classList.add('hidden'));
+      restartBtn.classList.add('hidden');
+      input.disabled = false;
+      guessBtn.disabled = false;
+      input.focus();
+      statusBar.textContent = `Level: ${currentLevel} / ${totalLevels}`;
+    }
+
+    function updateWord() {
+      wordEl.innerHTML = selectedWord
+        .split('')
+        .map(letter => (correctLetters.includes(letter) ? letter : '_'))
+        .join(' ');
+    }
+
+    function updateWrongLetters() {
+      wrongEl.textContent = wrongLetters.join(', ');
+      hangmanParts.forEach((part, index) => {
+        const errors = wrongLetters.length;
+        part.classList.toggle('hidden', index >= errors);
+      });
+
+      if (wrongLetters.length === hangmanParts.length) {
+        message.textContent = `🎭 You lost! The word was "${selectedWord}".`;
+        restartBtn.classList.remove('hidden');
+        input.disabled = true;
+        guessBtn.disabled = true;
+      }
+    }
+
+    function checkWin() {
+      const currentWord = wordEl.textContent.replace(/\s/g, '');
+      if (currentWord === selectedWord) {
+        message.textContent = '🎉 You guessed the word!';
+        restartBtn.classList.remove('hidden');
+        input.disabled = true;
+        guessBtn.disabled = true;
+      }
+    }
+
+    guessBtn.addEventListener('click', () => {
+      const letter = input.value.toLowerCase();
+      if (!letter.match(/[a-z]/i) || letter.length !== 1) {
+        alert('Enter a single letter (A-Z).');
+        return;
+      }
+
+      if (correctLetters.includes(letter) || wrongLetters.includes(letter)) {
+        alert('You already guessed that letter!');
+      } else if (selectedWord.includes(letter)) {
+        correctLetters.push(letter);
+        updateWord();
+        checkWin();
+      } else {
+        wrongLetters.push(letter);
+        updateWrongLetters();
+      }
+
+      input.value = '';
+    });
+
+    restartBtn.addEventListener('click', () => {
+      if (currentLevel < totalLevels) {
+        currentLevel++;
+        startGame();
+      } else {
+        message.textContent = "🎶 You've finished all Jazz words!";
+        restartBtn.classList.add('hidden');
+        nextLevelBtn.classList.remove('hidden');
+      }
+    });
+
+    nextLevelBtn.addEventListener('click', () => {
+      // 🔗 Change this to your final jazz page URL:
+      window.location.href = "finaljazz.html";
+    });
+
+    // Start first game
+    startGame();
+  </script>
+</body>
+</html>

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Joined AI</title>
+  <style>
+    body {
+      background: url('kingdommap-destroyed.png') no-repeat center center fixed;
+      background-size: cover;
+      color: #eee;
+      font-family: 'Poppins', sans-serif;
+      text-align: center;
+      padding-top: 180px;
+    }
+    #character {
+      width: 220px;
+      filter: grayscale(100%);
+      animation: slowFloat 4s ease-in-out infinite;
+    }
+    @keyframes slowFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    #dialogue {
+      margin-top: 20px;
+      font-size: 1.2em;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    button {
+      margin-top: 40px;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 10px;
+      background-color: #cc3333;
+      color: white;
+      font-size: 1em;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    button:hover {
+      background-color: #ff4444;
+    }
+  </style>
+</head>
+<body>
+  <img id="character" src="character.png" alt="Hero Character">
+  <p id="dialogue">I thought joining them would make things better... but I was wrong.</p>
+  <button id="restartBtn">Restart Game</button>
+
+  <script>
+    const dialogueLines = [
+      "I thought joining them would make things better... but I was wrong.",
+      "The world is silent now. Empty. Creativity is gone.",
+      "I failed my mission... and now I can never go home."
+    ];
+
+    let i = 0;
+    const text = document.getElementById('dialogue');
+
+    const interval = setInterval(() => {
+      i++;
+      if (i < dialogueLines.length) {
+        text.textContent = dialogueLines[i];
+      } else {
+        clearInterval(interval);
+      }
+    }, 4000);
+
+    document.getElementById('restartBtn').addEventListener('click', () => {
+      localStorage.clear(); // Deletes all saved progress
+      window.location.href = 'kingdommap.html'; // Return to starting map
+    });
+  </script>
+</body>
+</html>

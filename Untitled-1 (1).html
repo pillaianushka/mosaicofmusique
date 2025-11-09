@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Classical Level 2</title>
+  <style>
+    /* --- layout & background --- */
+    body {
+      margin: 0;
+      overflow: hidden;
+      background: url('gardenbg.jpg') no-repeat center center;
+      background-size: cover;
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    /* --- container for top and bottom --- */
+    .game-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 60px;
+    }
+
+    .musician-row,
+    .instrument-row {
+      display: flex;
+      justify-content: center;
+      gap: 100px;
+    }
+
+    /* --- musicians --- */
+    .musician {
+      width: 150px;
+      height: 200px;
+      background-size: cover;
+      background-repeat: no-repeat;
+    }
+
+    #violinist { background-image: url('violinist.jpg'); }
+    #pianist   { background-image: url('pianist.jpg'); }
+    #guitarist { background-image: url('guitarist.jpg'); }
+
+    /* --- draggable instruments --- */
+    .instrument {
+      width: 120px;
+      height: 120px;
+      background-size: contain;
+      background-repeat: no-repeat;
+      border: 2px solid #fff;
+      border-radius: 10px;
+      cursor: grab;
+    }
+
+    #violin { background-image: url('violin.jpg'); }
+    #piano  { background-image: url('piano.jpg'); }
+    #guitar { background-image: url('guitar.jpg'); }
+
+    /* --- popup feedback --- */
+    #popup {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.55);
+      color: #fff;
+      font-size: 2rem;
+      font-weight: bold;
+      z-index: 1000;
+      flex-direction: column;
+    }
+
+    /* --- next arrow button --- */
+    #nextBtn {
+      display: none;
+      margin-top: 20px;
+      padding: 10px 18px;
+      font-size: 1.5rem;
+      border: none;
+      border-radius: 50%;
+      background: #fff;
+      cursor: pointer;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+    }
+  </style>
+</head>
+<body>
+  <div class="game-container">
+    <div class="musician-row">
+      <div id="violinist" class="musician dropzone" data-instrument="violin"
+           ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+      <div id="pianist" class="musician dropzone" data-instrument="piano"
+           ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+      <div id="guitarist" class="musician dropzone" data-instrument="guitar"
+           ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+    </div>
+
+    <div class="instrument-row">
+      <div id="violin" class="instrument" draggable="true" ondragstart="drag(event)"></div>
+      <div id="piano" class="instrument" draggable="true" ondragstart="drag(event)"></div>
+      <div id="guitar" class="instrument" draggable="true" ondragstart="drag(event)"></div>
+    </div>
+  </div>
+
+  <!-- feedback popup -->
+  <div id="popup">
+    <span>Correct!</span>
+    <button id="nextBtn" onclick="location.href='nextpage2.html'">&#10145;</button>
+  </div>
+
+  <script>
+    let matchedCount = 0;
+
+    function allowDrop(ev) {
+      ev.preventDefault();
+    }
+
+    function drag(ev) {
+      ev.dataTransfer.setData('text', ev.target.id);
+    }
+
+    function drop(ev) {
+      ev.preventDefault();
+      const data = ev.dataTransfer.getData('text');
+      const dragged = document.getElementById(data);
+      const target = ev.target.closest('.dropzone');
+
+      if (!target) return;
+
+      if (target.dataset.instrument === data) {
+        target.appendChild(dragged);
+        dragged.style.position = 'static'; // resets to flow layout
+        dragged.style.bottom = dragged.style.left = 'unset';
+
+        matchedCount++;
+        const finalMatch = matchedCount === 3;
+        showPopup(finalMatch);
+
+        if (finalMatch) {
+          document.getElementById('nextBtn').style.display = 'inline-block';
+        }
+      }
+    }
+
+    function showPopup(persistent = false) {
+      const pop = document.getElementById('popup');
+      pop.style.display = 'flex';
+      if (!persistent) {
+        setTimeout(() => { pop.style.display = 'none'; }, 1100);
+      }
+    }
+  </script>
+</body>
+</html>

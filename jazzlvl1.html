@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Jazz Kingdom</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      background-image: url('jazzbg.jpg');
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-attachment: fixed;
+      font-family: 'Georgia', serif;
+    }
+
+
+
+
+    #jazzdude {
+      position: absolute;
+      bottom: 0px;
+      left: 50px;
+      height: 500px;
+    }
+
+
+
+
+    #dialogueText {
+      position: absolute;
+      bottom: 350px;
+      left: 30%;
+      width: 50%;
+      font-size: 20px;
+      color: black;
+      display: none;
+      background: rgba(255, 255, 255, 0.9);
+      padding: 12px;
+      border-radius: 10px;
+    }
+
+
+
+    #riddleText {
+      position: absolute;
+      bottom: 200px;
+      left: 30%;
+      width: 50%;
+      font-size: 20px;
+      color: black;
+      display: none;
+      background: rgba(255, 255, 255, 0.8);
+      padding: 10px;
+      border-radius: 10px;
+    }
+
+
+
+
+    #answerBox {
+      position: absolute;
+      bottom: 14%;
+      left: 30%;
+      display: none;
+    }
+
+
+
+
+    #answerBox input {
+      padding: 8px;
+      font-size: 16px;
+      border-radius: 5px;
+      border: 1px solid #444;
+    }
+
+
+
+
+    #feedback {
+      margin-top: 10px;
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+
+
+
+    #nextButton {
+      position: absolute;
+      bottom: 10%;
+      right: 5%;
+      padding: 12px 24px;
+      font-size: 18px;
+      background-color: #f8f8f8;
+      border: 2px solid #333;
+      border-radius: 12px;
+      display: none;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+
+
+
+    #nextButton:hover {
+      background-color: #ddd;
+    }
+  </style>
+</head>
+<body>
+
+
+
+
+  <!-- Elf character -->
+  <img id="jazzdude" src="jazzman.jpg" alt="Jazz dude">
+
+
+
+
+  <!-- Dialogue text -->
+  <div id="dialogueText">
+    <b>Musician:</b> "Traveler, to pass you must solve my riddle..."
+  </div>
+
+
+
+
+  <!-- Riddle text -->
+  <div id="riddleText">
+    <b>I wear a curved neck and sing with brass,<br>
+ Blow through me and soulful notes pass.<br>
+ What am I?
+   
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+ 
+  <div id="answerBox">
+    <input type="text" id="userAnswer" placeholder="Your answer here..."   autocomplete="off" autocorrect="off">
+    <button onclick="checkAnswer()">Submit</button>
+    <p id="feedback"></p>
+  </div>
+    <!-- Next button -->
+    <button id="nextButton" onclick="goNext()">Next</button>
+  <script>
+    // Show dialogue, then riddle
+      window.onload = function () {
+        // First show dialogue
+        setTimeout(() => {
+          document.getElementById('dialogueText').style.display = 'block';
+        }, 1000);
+  
+  
+        // Then show riddle and answer box
+        setTimeout(() => {
+          document.getElementById('riddleText').style.display = 'block';
+          document.getElementById('answerBox').style.display = 'block';
+        }, 4000);
+      };
+  
+  
+  
+    
+  
+    function checkAnswer() {
+      const answer = document.getElementById('userAnswer').value.trim().toLowerCase();
+      const correctAnswers = ["saxophone", "a saxophone"];
+  
+  
+  
+  
+      if (correctAnswers.includes(answer)) {
+    feedback.textContent = "Correct ✅";
+    feedback.style.color = "green";
+    document.getElementById('nextButton').style.display = 'block';
+  } else {
+    feedback.textContent = "Incorrect ❌";
+    feedback.style.color = "red";
+  }
+  }
+  
+  
+  
+  
+  function goNext() {
+  window.location.href = "nextpage3.html";
+  }
+  </script>
+  
+  
+  </body>
+  </html>
+  
+  

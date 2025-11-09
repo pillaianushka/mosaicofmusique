@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Kingdom Map</title>
+  <style>
+    body {
+      margin: 0;
+      background: url('kingdommap.png') no-repeat center center fixed;
+      background-size: cover;
+      font-family: 'calibri', sans-serif;
+      transition: background 1s ease;
+    }
+
+    p {
+      position: absolute;
+      top: 12vw;
+      left: 85vw;
+      font-size: 1vw;
+      color: grey;
+    }
+
+    h1 {
+      position: absolute;
+      top: 0vw;
+      left: 1.04vw;
+      font-size: 2.46vw;
+      color: white;
+    }
+
+    .kingdom-btn {
+      position: absolute;
+      width: 7vw;
+      height: 7vw;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+    }
+
+    .kingdom-btn img {
+      width: 50%;
+      height: 50%;
+      pointer-events: none;
+      transition: opacity 0.5s ease;
+    }
+
+    .kingdom-btn:disabled img {
+      opacity: 0.5;
+    }
+
+    /* Obscuria starts faded */
+    #obscuriaBtn {
+      opacity: 0.3;
+      pointer-events: none;
+      transition: opacity 0.5s ease;
+    }
+
+    .status-bar {
+      position: fixed;
+      bottom: 0.52vw;
+      right: 0.52vw;
+      background: rgba(255, 255, 255, 0.8);
+      border-radius: 0.52vw;
+      padding: 0.52vw;
+      display: flex;
+      align-items: center;
+      gap: 0.42vw;
+    }
+
+    .shard {
+      width: 2.6vw;
+      opacity: 0.2;
+      transition: opacity 0.4s ease;
+    }
+
+    .shard.collected {
+      opacity: 1;
+    }
+
+    .restart-btn {
+      position: fixed;
+      top: 0.52vw;
+      right: 1.04vw;
+      font-size: 1rem;
+      padding: 0.52vw 1.04vw;
+      background: white;
+      color: black;
+      border: 0.1vw solid black;
+      border-radius: 0.42vw;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .restart-btn:hover {
+      background: black;
+      color: white;
+    }
+
+    /* Messages */
+    #finalMessage, #worldMessage {
+      position: fixed;
+      top: 40%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(0, 0, 0, 0.7);
+      color: white;
+      font-size: 2vw;
+      padding: 1vw 2vw;
+      border-radius: 1vw;
+      display: none;
+      text-align: center;
+      animation: fadeIn 1s ease forwards;
+    }
+
+    #worldMessage {
+      font-size: 2.2vw;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+
+<audio autoplay loop>
+  <source src="maintheme.mpeg" type="audio/mpeg">
+  Your browser does not support the audio element.
+</audio>
+
+
+
+  <h1>𝒦𝒾𝓃𝑔𝒹𝑜𝓂 𝑀𝒶𝓅</h1>
+  <button class="restart-btn" onclick="restartProgress()">Restart Game</button>
+
+  <p>𝒫𝓇𝑒𝓈𝓈 𝑜𝓃 𝓉𝒽𝑒 𝓈𝓉𝒶𝓇 <br>𝓉𝑜 𝒷𝑒𝑔𝒾𝓃 𝓉𝒽𝑒<br>𝓀𝒾𝓃𝑔𝒹𝑜𝓂'𝓈 𝓆𝓊𝑒𝓈𝓉!
+  <br><br><br><br><br><br><br><br><br>𝒪𝓃𝒸𝑒 𝒶𝓁𝓁 𝓀𝒾𝓃𝑔𝒹𝑜𝓂𝓈 𝒶𝓇𝑒 𝒸𝑜𝓂𝓅𝓁𝑒𝓉𝑒𝒹,<br>𝒾𝓉 𝓌𝒾𝓁𝓁 𝓈𝒽𝑜𝓌 𝒶𝓁𝓁<br>𝓉𝒽𝑒 𝓈𝒽𝒶𝓇𝒹𝓈 𝒸𝑜𝓁𝓁𝑒𝒸𝓉𝑒𝒹
+  </p>
+
+  <!-- Kingdom buttons -->
+  <button id="classicalBtn" class="kingdom-btn" style="top: 6vw; left: 80.7vw;" onclick="goToKingdom('classical')">
+    <img src="classicalstar.png" alt="Classical Kingdom">
+  </button>
+
+  <button id="jazzBtn" class="kingdom-btn" style="top: 20.3vw; left: 83vw;" onclick="goToKingdom('jazz')">
+    <img src="jazzstar.png" alt="Jazz Kingdom">
+  </button>
+
+  <button id="rockBtn" class="kingdom-btn" style="top: 40.6vw; left: 45.8vw;" onclick="goToKingdom('rock')">
+    <img src="rockstar.png" alt="Rock Kingdom">
+  </button>
+
+  <button id="hiphopBtn" class="kingdom-btn" style="top: 35.4vw; left: 6vw;" onclick="goToKingdom('hiphop')">
+    <img src="hiphopstar.png" alt="Hip-Hop Kingdom">
+  </button>
+
+  <button id="popBtn" class="kingdom-btn" style="top: 9.6vw; left: 7vw;" onclick="goToKingdom('pop')">
+    <img src="popstar.png" alt="Pop Kingdom">
+  </button>
+
+  <!-- Obscuria -->
+  <button id="obscuriaBtn" class="kingdom-btn" style="top: 22.6vw; left: 35vw;" onclick="goToKingdom('obscuria')">
+    <img src="obscuria.png" alt="Obscuria">
+  </button>
+
+  <!-- Shard status bar -->
+  <div class="status-bar">
+    <span>Shards:</span>
+    <img src="classicalshard.png" data-kingdom="classical" class="shard" alt="Classical shard">
+    <img src="jazzshard.png" data-kingdom="jazz" class="shard" alt="Jazz shard">
+    <img src="rockshard.png" data-kingdom="rock" class="shard" alt="Rock shard">
+    <img src="hiphopshard.png" data-kingdom="hiphop" class="shard" alt="Hip-hop shard">
+    <img src="popshard.png" data-kingdom="pop" class="shard" alt="Pop shard">
+  </div>
+
+  <!-- Messages -->
+  <div id="finalMessage">✨ All shards collected! Move on to the Final Chapter ✨</div>
+  <div id="worldMessage"></div>
+
+  <script>
+    const kingdoms = ["pop", "rock", "classical", "jazz", "hiphop"];
+
+    window.onload = function () {
+      updateUI();
+      updateWorldState(); // 🆕 updates map based on Obscuria ending
+    };
+
+    function updateUI() {
+      let allCollected = true;
+      kingdoms.forEach(k => {
+        const btn = document.getElementById(k + "Btn");
+        const shard = document.querySelector(`.shard[data-kingdom="${k}"]`);
+        const finished = localStorage.getItem(k + "Finished");
+
+        if (finished === "true") {
+          if (btn) btn.disabled = true;
+          if (shard) shard.classList.add("collected");
+        } else {
+          allCollected = false;
+          if (btn) btn.disabled = false;
+          if (shard) shard.classList.remove("collected");
+        }
+      });
+
+      const obscuriaBtn = document.getElementById("obscuriaBtn");
+      const finalMessage = document.getElementById("finalMessage");
+
+      if (allCollected) {
+        obscuriaBtn.style.opacity = "1";
+        obscuriaBtn.style.pointerEvents = "auto";
+        finalMessage.style.display = "block";
+      } else {
+        obscuriaBtn.style.opacity = "0.3";
+        obscuriaBtn.style.pointerEvents = "none";
+        finalMessage.style.display = "none";
+      }
+    }
+
+    function updateWorldState() {
+      const worldStatus = localStorage.getItem("worldStatus");
+      const worldMessage = document.getElementById("worldMessage");
+
+      if (worldStatus === "saved") {
+        // Player restored creativity
+        document.body.style.backgroundImage = "url('kingdommap.png')";
+        worldMessage.textContent = "✨ Thank you for saving the world ✨";
+        worldMessage.style.display = "block";
+      } 
+      else if (worldStatus === "destroyed") {
+        // Player joined AI
+        document.body.style.backgroundImage = "url('kingdommap_destroyed.png')";
+        worldMessage.textContent = "⚠️ You have failed. The world is now ruled by AI.";
+        worldMessage.style.display = "block";
+      } 
+      else {
+        // Default normal map
+        document.body.style.backgroundImage = "url('kingdommap.png')";
+        worldMessage.style.display = "none";
+      }
+    }
+
+    function goToKingdom(kingdom) {
+      const finished = localStorage.getItem(kingdom + "Finished");
+      if (finished === "true") {
+        alert("You have already finished this kingdom!");
+      } else {
+        window.location.href = kingdom + "kingdom.html";
+      }
+    }
+
+    function restartProgress() {
+      if (confirm("Are you sure you want to restart and erase your shard progress?")) {
+        kingdoms.forEach(k => localStorage.removeItem(k + "Finished"));
+        localStorage.removeItem("worldStatus"); // reset ending
+        updateUI();
+        updateWorldState();
+      }
+    }
+  </script>
+
+</body>
+</html>

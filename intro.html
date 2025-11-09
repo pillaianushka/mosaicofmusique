@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>The Mosaic of Music – Introduction</title>
+  <style>
+    body {
+      margin: 0;
+      background: url('gamebg.jpg') no-repeat center center;
+      background-size: cover;
+      color: #fdfdfd;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    header {
+      text-align: center;
+      padding: 40px 20px;
+      background: linear-gradient(to bottom, #000000, #1e3d59);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      box-shadow: 0 2px 15px rgba(0,0,0,0.3);
+    }
+
+    header h1 {
+      font-size: 2.5rem;
+      margin: 0;
+      text-shadow: 2px 2px 8px rgba(0,0,0,0.4);
+    }
+
+    .section {
+      padding: 60px 100px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .section img {
+      width: 350px;
+      height: auto;
+      border-radius: 15px;
+      margin: 20px 0;
+      box-shadow: 0 0 25px rgba(255,255,255,0.2);
+      border: 2px solid #fff;
+    }
+
+    h2 {
+      font-size: 2rem;
+      margin-bottom: 15px;
+      color: #ffffff;
+      
+    }
+
+    p {
+      max-width: 900px;
+      font-size: 1.1rem;
+    }
+
+    /* kingdom grid */
+    .kingdoms {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 40px;
+      margin-top: 40px;
+      width: 100%;
+    }
+
+    .kingdom {
+      background: rgba(255,255,255,0.1);
+      border-radius: 20px;
+      padding: 20px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.4);
+      transition: transform 0.3s;
+    }
+
+    .kingdom:hover {
+      transform: scale(1.04);
+    }
+
+    .kingdom img {
+      width: 100%;
+      border-radius: 15px;
+      margin-bottom: 10px;
+      border: 1px solid #fff;
+    }
+
+    .kingdom h3 {
+      color: #ffffff;
+      font-size: 1.4rem;
+      margin-bottom: 8px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 50px;
+      font-size: 1.1rem;
+      background-color: #122b3d;
+      color: #fff;
+    }
+
+    footer a {
+      color: #ffeb3b;
+      text-decoration: underline;
+    }
+
+    @media (max-width: 768px) {
+      .section {
+        padding: 40px 30px;
+      }
+      .section img {
+        width: 80%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>The Mosaic of Music – The Tale Begins</h1>
+  </header>
+
+  <!-- Character Introduction -->
+  <section class="section">
+    <h2>The Prince from Another Realm</h2>
+    <img src="character.png" alt="The Prince - Main Character">
+    <p>
+      In a world where melodies paint the skies and rhythm fuels the soul, our hero is a young prince from a distant realm. He is suddenly torn away from his homeland.
+      He awakens in a strange, fractured world, where the once-vibrant nations lie silent. The <b>soulless people of Obscuria</b> have drained creativity from every corner, replacing it with mechanical perfection.
+    </p>
+    <p>
+      The prince’s mission is clear: to <b>retrieve the five lost Shards of Harmony</b> scattered across the kingdoms. Only by restoring their light can he save this world, and regain his lost honor to return home.
+    </p>
+  </section>
+
+  <!-- The Five Kingdoms -->
+  <section class="section">
+    <h2>The Five Kingdoms of Sound</h2>
+    <p>
+      Each kingdom represents a genre of music, a fragment of creativity itself. Together, they form the great Mosaic of Musique, the source of all art and emotion in this realm.
+    </p>
+
+    <div class="kingdoms">
+      <div class="kingdom">
+        <img src="classicalcastle.jpg" alt="Elandria - Classical Kingdom">
+        <h3>Elandria</h3>
+        <p>
+          Land of grand halls and golden orchestras, where wisdom echoes in every note.
+          The Elandrian shard glows softly, a gemstone of harmony that keeps tradition alive. <br><br>
+          ~Classical, Opera, Baroque, Instrumental~
+        </p>
+      </div>
+
+      <div class="kingdom">
+        <img src="jazzkingdombg.jpg" alt="Ondaria - Jazz Kingdom">
+        <h3>Ondaria </h3>
+        <p>
+          Home to free spirits, smooth rhythms, and endless improvisation. 
+          The Ondarians believe life itself is a song, ever-changing and never bound by rules.<br><br>
+          ~Jazz, Reggae, Blues, Funk, Soul~
+        </p>
+      </div>
+
+      <div class="kingdom">
+        <img src="rockkingdom.jpg" alt="Silexia - Rock Kingdom">
+        <h3>Silexia </h3>
+        <p>
+          Forged in passion and rebellion, Silexia’s people stand tall against silence.
+          Their shard pulses like a beating heart, fierce, alive, and unstoppable.<br><br>
+          ~Rock, Metal, Punk, Indie, Alt~
+        </p>
+      </div>
+
+      <div class="kingdom">
+        <img src="hiphopkingdom.png" alt="Szletnia - Hip-Hop Kingdom">
+        <h3>Szletnia </h3>
+        <p>
+          Rhythmic streets and poetic souls define this kingdom. 
+          In every rhyme and beat lies truth, strength, and unity in the voice of the people.<br><br>
+        ~Hip Hop, Rap, R&B, Trap~
+        </p>
+      </div>
+
+      <div class="kingdom">
+        <img src="popkingdom.png" alt="Cantoria - Pop Kingdom">
+        <h3>Cantoria </h3>
+        <p>
+          Bright, dazzling, and ever-evolving, Cantoria is where dreams and melodies collide.
+          The shard of Cantoria shines with joy, a reminder of the beauty of connection.<br><br>
+          ~Pop, EDM, K-pop, Disco, Synthwave~
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- The Villain -->
+  <section class="section">
+    <h2>The Soulless Machine</h2>
+    <img src="machineherald.jpg" alt="The Evil Mastermind">
+    <p>
+      From the depths of Obscuria arises the <b>Soulless Machine</b>who is a cold, calculating entity who believes perfection lies in logic, not emotion.
+      It seeks to erase all creativity, replacing it with flawless, machine-produced art devoid of soul or heart.
+    </p>
+    <p>
+      To protect the remaining sparks of imagination and creativity, the shards were hidden away across the five kingdoms. But their power wanes... and time is running out.
+    </p>
+    <p>
+      Only by solving each kingdom’s challenges, aiding the characters, and reviving the hope in their hearts can the prince bring the shards back to life.
+    </p>
+  </section>
+
+  <!-- Closing -->
+  <section class="section">
+    <h2>The Journey Awaits</h2>
+    <p>
+      This is not just a quest for redemption, it is a battle for the soul of art itself.
+      From ancient ruins to neon-lit cities, from whispers of violins to echoes of drums, the prince must journey through the kingdoms shaped by sound and silence alike.
+    </p>
+    <p>
+      The choices you make will shape his destiny.<br>
+      Will harmony prevail... or will the colourless void consume all?
+
+      Note: You can start with any kingdom and collect all the shards to move on to Obscuria
+    </p>
+
+    <br>
+    <button onclick="location.href='kingdommap.html'" style="
+      background-color: #ff3b3b;
+      color: white;
+      font-size: 1.2rem;
+      border: 2px solid #000;
+      padding: 12px 30px;
+      border-radius: 10px;
+      cursor: pointer;
+      box-shadow: 0 0 10px rgba(255,255,255,0.4);
+      transition: background 0.3s;">
+      Begin the Adventure →
+    </button>
+  </section>
+
+</body>
+</html>

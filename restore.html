@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Restored World</title>
+  <style>
+    body {
+      background: url('kingdommap-saved.png') no-repeat center center fixed;
+      background-size: cover;
+      color: white;
+      font-family: 'Poppins', sans-serif;
+      text-align: center;
+      padding-top: 180px;
+      transition: opacity 3s ease-in-out;
+    }
+    #character {
+      width: 220px;
+      animation: float 3s ease-in-out infinite;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-15px); }
+    }
+    #dialogue {
+      margin-top: 20px;
+      font-size: 1.2em;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    #thankyou {
+      display: none;
+      font-size: 2em;
+      margin-top: 100px;
+    }
+  </style>
+</head>
+<body id="scene">
+  <img id="character" src="character.png" alt="Hero Character">
+  <p id="dialogue">The creativity flows again... I can feel life returning to every corner of the world.</p>
+
+  <script>
+    const dialogue = [
+      "The creativity flows again... I can feel life returning to every corner of the world.",
+      "We did it. The music, the art, the color — all saved.",
+      "I’m finally free to go home, knowing the world will sing again."
+    ];
+
+    let index = 0;
+    const text = document.getElementById('dialogue');
+
+    const interval = setInterval(() => {
+      index++;
+      if (index < dialogue.length) {
+        text.textContent = dialogue[index];
+      } else {
+        clearInterval(interval);
+        document.body.style.opacity = '0';
+        setTimeout(() => {
+          document.body.innerHTML = '<h1 id="thankyou">Thank you for playing 🌟</h1>';
+          document.body.style.opacity = '1';
+        }, 3000);
+      }
+    }, 4000);
+  </script>
+</body>
+</html>

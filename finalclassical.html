@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Classical Shard Unlocked</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Georgia', serif;
+      background: url('chamberbg.jpg') no-repeat center center;
+      background-size: cover;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      text-align: center;
+    }
+
+
+    h1 {
+      font-size: 3rem;
+      margin-bottom: 20px;
+      text-shadow: 2px 2px 10px #000;
+    }
+
+
+    .shard-container {
+      margin: 20px 0;
+    }
+
+
+    .shard-container img {
+      width: 180px;
+      animation: spin 6s linear infinite;
+    }
+
+
+    @keyframes spin {
+      from { transform: rotateY(0deg); }
+      to { transform: rotateY(360deg); }
+    }
+
+
+    .button {
+      margin-top: 30px;
+      font-size: 1.2rem;
+      padding: 12px 25px;
+      background: white;
+      color: black;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+
+
+    .button:hover {
+      transform: scale(1.05);
+    }
+  </style>
+</head>
+<body>
+
+
+  <h1>🎉 Congratulations! 🎉</h1>
+  <p>You have unlocked the <strong>Classical Shard</strong> —<br>Gemstone of Harmony.</p>
+
+
+  <div class="shard-container">
+    <img src="classicalshard.png" alt="Spinning Classical Shard">
+  </div>
+
+
+  <button class="button" onclick="location.href='kingdommap.html'">Return to the Kingdom Map</button>
+
+
+  <script>
+    // ✅ Save progress so the map knows Classical is finished
+    localStorage.setItem("classicalFinished", "true");
+  </script>
+
+
+</body>
+</html>
+
+
+

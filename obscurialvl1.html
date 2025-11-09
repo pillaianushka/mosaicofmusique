@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Obscuria – Level 1: Song of Shards</title>
+  <style>
+    body {
+      margin: 0;
+      background: url('chamberbg.jpg') no-repeat center center fixed;
+      background-size: cover;
+      font-family: 'Georgia', serif;
+      color: white;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 2.5vw;
+      margin-top: 2vw;
+      text-shadow: 0 0 10px #000;
+    }
+
+    p {
+      font-size: 1.2vw;
+      color: #ddd;
+      margin-bottom: 2vw;
+    }
+
+    .game-area {
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
+      padding: 2vw;
+    }
+
+    .shard, .song {
+      width: 12vw;
+      height: 12vw;
+      border: 0.2vw solid rgba(255, 255, 255, 0.6);
+      border-radius: 1vw;
+      background: rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(3px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin: 1vw;
+      transition: 0.3s;
+    }
+
+    .shard img {
+      width: 4vw;
+      margin-bottom: 0.5vw;
+      pointer-events: none;
+    }
+
+    .shard {
+      cursor: grab;
+    }
+
+    .song {
+      border-style: dashed;
+    }
+
+    .song.correct {
+      border-color: lightgreen;
+      background: rgba(0, 255, 0, 0.1);
+    }
+
+    .song.wrong {
+      border-color: red;
+      background: rgba(255, 0, 0, 0.1);
+    }
+
+    .message {
+      display: none;
+      margin-top: 2vw;
+      font-size: 1.8vw;
+      color: #ffffff;
+      text-shadow: 0 0 15px gold;
+      animation: fadeIn 1s ease forwards;
+    }
+
+    @keyframes fadeIn {
+      from {opacity: 0;}
+      to {opacity: 1;}
+    }
+
+    .next-btn {
+      display: none;
+      margin-top: 1.5vw;
+      padding: 0.8vw 2vw;
+      font-size: 1.2vw;
+      border: none;
+      border-radius: 0.6vw;
+      background: gold;
+      color: black;
+      cursor: pointer;
+      transition: 0.3s;
+      text-shadow: none;
+    }
+
+    .next-btn:hover {
+      background: #ffcf40;
+      transform: scale(1.05);
+    }
+
+    .back-btn {
+      position: fixed;
+      top: 1vw;
+      left: 1vw;
+      font-size: 1vw;
+      background: rgba(255,255,255,0.8);
+      color: black;
+      padding: 0.5vw 1vw;
+      border: none;
+      border-radius: 0.4vw;
+      cursor: pointer;
+    }
+
+    .back-btn:hover {
+      background: black;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+
+  <button class="back-btn" onclick="window.location.href='kingdommap.html'">← Back to Map</button>
+
+  <h1>Obscuria: Level 1 — Song of the Shards</h1>
+  <p>Match each shard to its rightful theme song to restore balance to music.</p>
+
+  <div class="game-area" id="shards">
+    <div class="shard" draggable="true" data-kingdom="pop">
+      <img src="popshard.png" alt="Pop Shard">
+      <strong>Pop Kingdom</strong>
+      <span>Genre: Pop</span>
+    </div>
+
+    <div class="shard" draggable="true" data-kingdom="rock">
+      <img src="rockshard.png" alt="Rock Shard">
+      <strong>Rock Kingdom</strong>
+      <span>Genre: Rock</span>
+    </div>
+
+    <div class="shard" draggable="true" data-kingdom="classical">
+      <img src="classicalshard.png" alt="Classical Shard">
+      <strong>Classical Kingdom</strong>
+      <span>Genre: Classical</span>
+    </div>
+
+    <div class="shard" draggable="true" data-kingdom="jazz">
+      <img src="jazzshard.png" alt="Jazz Shard">
+      <strong>Jazz Kingdom</strong>
+      <span>Genre: Jazz</span>
+    </div>
+
+    <div class="shard" draggable="true" data-kingdom="hiphop">
+      <img src="hiphopshard.png" alt="Hip-Hop Shard">
+      <strong>Hip-Hop Kingdom</strong>
+      <span>Genre: Hip-Hop</span>
+    </div>
+  </div>
+
+  <div class="game-area" id="songs">
+    <div class="song" data-kingdom="rock">🎸 “Riff of Rebellion”</div>
+    <div class="song" data-kingdom="jazz">🎷 “Midnight Sax Serenade”</div>
+    <div class="song" data-kingdom="classical">🎻 “Symphony of Light”</div>
+    <div class="song" data-kingdom="hiphop">🎤 “Rhythm Reborn”</div>
+    <div class="song" data-kingdom="pop">🎶 “Starlight Echo”</div>
+  </div>
+
+  <div class="message" id="winMessage">✨ You have restored harmony! The gateway to the final chapter opens... ✨</div>
+
+  <button class="next-btn" id="nextBtn" onclick="window.location.href='obscurialvl2.html'">Next Level →</button>
+
+  <script>
+    const shards = document.querySelectorAll('.shard');
+    const songs = document.querySelectorAll('.song');
+    const winMessage = document.getElementById('winMessage');
+    const nextBtn = document.getElementById('nextBtn');
+    let correctCount = 0;
+
+    shards.forEach(shard => {
+      shard.addEventListener('dragstart', e => {
+        e.dataTransfer.setData('kingdom', shard.dataset.kingdom);
+      });
+    });
+
+    songs.forEach(song => {
+      song.addEventListener('dragover', e => e.preventDefault());
+      song.addEventListener('drop', e => {
+        e.preventDefault();
+        const draggedKingdom = e.dataTransfer.getData('kingdom');
+        const correctKingdom = song.dataset.kingdom;
+
+        if (draggedKingdom === correctKingdom && !song.classList.contains('correct')) {
+          song.classList.add('correct');
+          song.textContent = "✅ " + song.textContent;
+          correctCount++;
+          document.querySelector(`.shard[data-kingdom="${draggedKingdom}"]`).style.display = "none";
+        } else if (draggedKingdom !== correctKingdom) {
+          song.classList.add('wrong');
+          setTimeout(() => song.classList.remove('wrong'), 600);
+        }
+
+        if (correctCount === 5) {
+          winMessage.style.display = "block";
+          nextBtn.style.display = "inline-block";
+          localStorage.setItem("obscuriaFinished", "true");
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>
